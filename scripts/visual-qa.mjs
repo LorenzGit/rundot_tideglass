@@ -35,6 +35,9 @@ const PORT = 5394;
 const VIEWPORTS = [
     { name: "phone-tall", width: 393, height: 852, scale: 2 },
     { name: "phone-short", width: 360, height: 640, scale: 2 },
+    // A phone on its side: the game frame becomes a very short, narrow
+    // pillar, which is the layout most likely to overflow.
+    { name: "phone-landscape", width: 852, height: 393, scale: 2 },
     { name: "tablet", width: 820, height: 1180, scale: 2 },
     { name: "desktop", width: 1440, height: 900, scale: 1 },
 ];
