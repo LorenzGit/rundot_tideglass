@@ -1,0 +1,51 @@
+{
+  "client": {
+    "values": {
+      "tideglass_runtime": {
+        "dailyRewardsEnabled": true,
+        "dailyQuestsEnabled": true,
+        "notificationDelaySeconds": 86400
+      },
+      "tideglass_monetization": {
+        "enabled": true,
+        "purchasesEnabled": true,
+        "rewardedAdsEnabled": true,
+        "interstitialAdsEnabled": true,
+        "placements": {
+          "tide_cache": {
+            "enabled": true,
+            "cooldownSeconds": 0,
+            "sessionCap": 4,
+            "dailyCap": 12,
+            "rewardMultiplier": 1
+          },
+          "second_wind": {
+            "enabled": true,
+            "cooldownSeconds": 45,
+            "sessionCap": 2,
+            "dailyCap": 6,
+            "rewardMultiplier": 1
+          },
+          "between_levels": {
+            "enabled": true,
+            "cooldownSeconds": 90,
+            "sessionCap": 2,
+            "dailyCap": 5,
+            "rewardMultiplier": 1
+          }
+        },
+        "products": {
+          "lantern_kit": { "enabled": true },
+          "still_water": { "enabled": true },
+          "deepwater_bundle": { "enabled": true }
+        }
+      }
+    },
+    "overrides": [],
+    "experiments": []
+  },
+  "server": {
+    "values": {},
+    "overrides": []
+  }
+}

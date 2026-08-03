@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>TIDEGLASS thumbnail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" />
+    <style>
+        body { margin: 0; background: #03101a; display: grid; place-items: center; min-height: 100vh; }
+        img { width: 512px; height: 512px; }
+    </style>
+</head>
+<body>
+    <!--
+      Development-only page. `scripts/make-thumbnail.mjs` opens it in headless
+      Chromium and reads `window.__thumbnail()`. It is never part of the
+      production build: `vite build` bundles index.html and nothing else.
+    -->
+    <img id="preview" alt="Thumbnail preview" />
+    <script type="module">
+        import { renderThumbnail } from "/src/dev/thumbnail.ts";
+        // The wordmark is set in Marcellus; rendering before it loads would bake
+        // the fallback serif into the shipped tile.
+        await document.fonts.ready;
+        document.getElementById("preview").src = await renderThumbnail();
+        window.__thumbnail = () => renderThumbnail();
+    </script>
+</body>
+</html>

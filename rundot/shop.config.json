@@ -1,0 +1,64 @@
+{
+  "items": [
+    {
+      "itemId": "tideglass_deepwater_bundle",
+      "name": "Deepwater Bundle",
+      "description": "The Lantern Kit and Still Water together, plus the Abyssal tile finish. Every level starts with one extra hint, undo and shuffle; the between-levels interstitial is gone for good. No board, tile, layout or score is changed.",
+      "category": "bundle",
+      "price": { "type": "bucks", "value": "429" },
+      "entitlements": [
+        { "entitlementId": "tideglass_lantern_kit", "quantity": 1, "consumable": false },
+        { "entitlementId": "tideglass_still_water", "quantity": 1, "consumable": false },
+        { "entitlementId": "tideglass_finish_abyssal", "quantity": 1, "consumable": false }
+      ],
+      "assets": {},
+      "unique": true,
+      "active": true,
+      "regions": [],
+      "refundEligible": true,
+      "refundWindowHours": 24,
+      "tags": ["tideglass", "bundle", "tools", "ad-free", "cosmetic", "permanent"],
+      "sortOrder": 1,
+      "releasedAt": null,
+      "expiresAt": null
+    },
+    {
+      "itemId": "tideglass_lantern_kit",
+      "name": "Lantern Kit",
+      "description": "Every level from now on starts with one extra hint, one extra undo and one extra shuffle. Permanent. The same tools are always earnable with pearls by playing.",
+      "category": "non_consumable",
+      "price": { "type": "bucks", "value": "179" },
+      "entitlements": [{ "entitlementId": "tideglass_lantern_kit", "quantity": 1, "consumable": false }],
+      "assets": {},
+      "unique": true,
+      "active": true,
+      "regions": [],
+      "refundEligible": true,
+      "refundWindowHours": 24,
+      "tags": ["tideglass", "tools", "permanent"],
+      "sortOrder": 2,
+      "releasedAt": null,
+      "expiresAt": null
+    },
+    {
+      "itemId": "tideglass_still_water",
+      "name": "Still Water",
+      "description": "Permanently removes the interstitial between levels. Optional reward videos remain available and are never required to finish a level.",
+      "category": "non_consumable",
+      "price": { "type": "bucks", "value": "299" },
+      "entitlements": [{ "entitlementId": "tideglass_still_water", "quantity": 1, "consumable": false }],
+      "assets": {},
+      "unique": true,
+      "active": true,
+      "regions": [],
+      "refundEligible": true,
+      "refundWindowHours": 24,
+      "tags": ["tideglass", "ad-free", "permanent"],
+      "sortOrder": 3,
+      "releasedAt": null,
+      "expiresAt": null
+    }
+  ],
+  "sales": [],
+  "collections": []
+}

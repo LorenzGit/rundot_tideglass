@@ -1,0 +1,29 @@
+KEY,English,PortugueseBR,SpanishLA
+SettingsLanguage,LANGUAGE,IDIOMA,IDIOMA
+ButtonBack,BACK,VOLTAR,ATRÁS
+MenuStartGame,START GAME,INICIAR JOGO,INICIAR JUEGO
+MenuSettings,SETTINGS,OPÇÕES,AJUSTES
+MenuDailyRewards,DAILY REWARDS,RECOMPENSAS DIÁRIAS,RECOMPENSAS DIARIAS
+MenuDailyQuests,DAILY QUESTS,MISSÕES DIÁRIAS,MISIONES DIARIAS
+MenuShop,SHOP,LOJA,TIENDA
+MenuStats,STATS,ESTATÍSTICAS,ESTADÍSTICAS
+MenuRunFeatures,RUN FEATURES,RECURSOS RUN,FUNCIONES RUN
+MenuSubtitle,A TINY WORKSHOP OF BIG IDEAS,UMA PEQUENA OFICINA DE GRANDES IDEIAS,UN PEQUEÑO TALLER DE GRANDES IDEAS
+SettingsMusic,MUSIC,MÚSICA,MÚSICA
+SettingsSfx,SOUND EFFECTS,EFEITOS SONOROS,EFECTOS DE SONIDO
+SettingsMusicVolume,MUSIC VOLUME,VOLUME DA MÚSICA,VOLUMEN DE MÚSICA
+SettingsSfxVolume,SFX VOLUME,VOLUME DOS EFEITOS,VOLUMEN DE EFECTOS
+SettingsHaptics,HAPTICS,VIBRAÇÃO,VIBRACIÓN
+SettingsNotifications,NOTIFICATIONS,NOTIFICAÇÕES,NOTIFICACIONES
+SettingsReducedMotion,REDUCED MOTION,MOVIMENTO REDUZIDO,MOVIMIENTO REDUCIDO
+SettingsQuality,QUALITY,QUALIDADE,CALIDAD
+SettingsHigh,HIGH,ALTA,ALTA
+SettingsLow,LOW,BAIXA,BAJA
+SettingsUnavailable,UNAVAILABLE OUTSIDE RUN HOST,INDISPONÍVEL FORA DO RUN,NO DISPONIBLE FUERA DE RUN
+DailyRewardsBody,Rewards unlock through trusted daily state.,Recompensas usam o estado diário confiável.,Las recompensas usan estado diario confiable.
+DailyQuestsBody,Quest claims require persisted verified progress.,As missões exigem progresso salvo e verificado.,Las misiones requieren progreso guardado y verificado.
+ShopBody,Live catalog pricing appears only in a supported RUN host.,Os preços reais aparecem apenas no RUN compatível.,Los precios reales aparecen solo en RUN compatible.
+StatsBody,Your local template-session counters.,Contadores locais desta sessão do modelo.,Contadores locales de esta sesión de plantilla.
+ButtonPlay,PLAY DEMO,JOGAR DEMO,JUGAR DEMO
+NotificationTitle,Your workshop misses you!,Sua oficina sente sua falta!,¡Tu taller te extraña!
+NotificationReEngagementBody,"A new batch of bright ideas is ready—come give it a bounce.","Um novo lote de ideias brilhantes está pronto—venha dar um salto.","Un nuevo lote de ideas brillantes está listo—ven a darle un rebote."
