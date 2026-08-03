@@ -113,7 +113,7 @@ class AudioManager {
             tap: 55,
             start: 180,
             place: 40,
-            match: 40,
+            match: 70,
             perfect: 140,
             blocked: 140,
             shuffle: 260,
@@ -133,10 +133,22 @@ class AudioManager {
         /**
          * Cues are glass and water, not beeps: short sines that RISE for the
          * good outcomes and fall for the bad ones, so the meaning of a sound is
-         * legible before the player has learned the specific cue.
+         * legible before the player has learned the specific cue. Match/perfect
+         * are multi-voice chimes so a successful shatter reads as reward, not a
+         * single blip.
          */
+        const now = this.context.currentTime;
+        if (cue === "match") {
+            this.playMatchChime(now, false);
+            return;
+        }
+        if (cue === "perfect") {
+            this.playMatchChime(now, true);
+            return;
+        }
+
         const cues: Record<
-            SfxCue,
+            Exclude<SfxCue, "match" | "perfect">,
             {
                 frequency: number;
                 endFrequency: number;
@@ -148,8 +160,6 @@ class AudioManager {
             tap: { frequency: 440, endFrequency: 493.88, duration: 0.045, peak: 0.04, type: "sine" },
             start: { frequency: 293.66, endFrequency: 440, duration: 0.2, peak: 0.06, type: "triangle" },
             place: { frequency: 587.33, endFrequency: 523.25, duration: 0.07, peak: 0.035, type: "sine" },
-            match: { frequency: 659.26, endFrequency: 987.77, duration: 0.16, peak: 0.055, type: "sine" },
-            perfect: { frequency: 783.99, endFrequency: 1567.98, duration: 0.3, peak: 0.06, type: "triangle" },
             blocked: { frequency: 174.61, endFrequency: 155.56, duration: 0.09, peak: 0.032, type: "sine" },
             shuffle: { frequency: 220, endFrequency: 659.26, duration: 0.34, peak: 0.045, type: "triangle" },
             tool: { frequency: 493.88, endFrequency: 739.99, duration: 0.14, peak: 0.045, type: "sine" },
@@ -158,20 +168,113 @@ class AudioManager {
             defeat: { frequency: 261.626, endFrequency: 116.541, duration: 0.52, peak: 0.055, type: "triangle" },
             error: { frequency: 146.83, endFrequency: 110, duration: 0.16, peak: 0.045, type: "triangle" },
         };
-        const definition = cues[cue];
-        const now = this.context.currentTime;
+        this.playTone(now, cues[cue]);
+    }
+
+    /**
+     * Sea-glass success: a quick major arpeggio (E–G♯–B) with a soft high
+     * shimmer. Perfect adds a fourth overtone and a little more sustain.
+     */
+    private playMatchChime(now: number, perfect: boolean): void {
+        // E major triad, rising — reads as "clear / open" without a buzzy chord.
+        const notes: Array<{
+            frequency: number;
+            endFrequency: number;
+            delay: number;
+            duration: number;
+            peak: number;
+            type: OscillatorType;
+            attack: number;
+        }> = [
+            {
+                frequency: 659.26, // E5
+                endFrequency: 698.46,
+                delay: 0,
+                duration: 0.14,
+                peak: 0.052,
+                type: "sine",
+                attack: 0.006,
+            },
+            {
+                frequency: 830.61, // G#5
+                endFrequency: 880.0,
+                delay: 0.042,
+                duration: 0.16,
+                peak: 0.048,
+                type: "sine",
+                attack: 0.007,
+            },
+            {
+                frequency: 987.77, // B5
+                endFrequency: 1046.5,
+                delay: 0.088,
+                duration: 0.2,
+                peak: 0.044,
+                type: "triangle",
+                attack: 0.008,
+            },
+            {
+                // Soft upper sparkle — glass ring, not a loud lead.
+                frequency: 1318.51, // E6
+                endFrequency: 1480.0,
+                delay: 0.06,
+                duration: perfect ? 0.32 : 0.24,
+                peak: perfect ? 0.028 : 0.02,
+                type: "sine",
+                attack: 0.012,
+            },
+        ];
+        if (perfect) {
+            notes.push({
+                frequency: 1567.98, // G6
+                endFrequency: 1760.0,
+                delay: 0.14,
+                duration: 0.34,
+                peak: 0.022,
+                type: "triangle",
+                attack: 0.014,
+            });
+        }
+        for (const note of notes) {
+            this.playTone(now + note.delay, {
+                frequency: note.frequency,
+                endFrequency: note.endFrequency,
+                duration: note.duration,
+                peak: note.peak,
+                type: note.type,
+                attack: note.attack,
+            });
+        }
+    }
+
+    private playTone(
+        startTime: number,
+        definition: {
+            frequency: number;
+            endFrequency: number;
+            duration: number;
+            peak: number;
+            type: OscillatorType;
+            attack?: number;
+        },
+    ): void {
+        if (!this.context || !this.sfxBus) return;
+        const attack = definition.attack ?? 0.008;
         const oscillator = this.context.createOscillator();
         const envelope = this.context.createGain();
         oscillator.type = definition.type;
-        oscillator.frequency.setValueAtTime(definition.frequency, now);
-        oscillator.frequency.exponentialRampToValueAtTime(definition.endFrequency, now + definition.duration);
-        envelope.gain.setValueAtTime(0.0001, now);
-        envelope.gain.exponentialRampToValueAtTime(definition.peak, now + 0.008);
-        envelope.gain.exponentialRampToValueAtTime(0.0001, now + definition.duration);
+        oscillator.frequency.setValueAtTime(definition.frequency, startTime);
+        oscillator.frequency.exponentialRampToValueAtTime(
+            Math.max(definition.endFrequency, 20),
+            startTime + definition.duration,
+        );
+        envelope.gain.setValueAtTime(0.0001, startTime);
+        envelope.gain.exponentialRampToValueAtTime(definition.peak, startTime + attack);
+        envelope.gain.exponentialRampToValueAtTime(0.0001, startTime + definition.duration);
         oscillator.connect(envelope).connect(this.sfxBus);
         this.trackVoice(oscillator, envelope, this.sfxVoices);
-        oscillator.start(now);
-        oscillator.stop(now + definition.duration + 0.02);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + definition.duration + 0.03);
     }
 
     debugSnapshot(): AudioDebugSnapshot {

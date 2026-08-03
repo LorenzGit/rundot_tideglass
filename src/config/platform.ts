@@ -15,7 +15,7 @@
  * host cannot fulfil. `gameId` is the only one still waiting on `rundot init`.
  */
 export const PLATFORM_IDS = Object.freeze({
-    gameId: "REPLACE_WITH_RUN_GAME_ID",
+    gameId: "CWXOeuPkUTKkNf0TRgFt",
 
     /** Rewarded: double the pearls earned on a cleared level. */
     rewardedTideCache: "tideglass_tide_cache_rewarded",

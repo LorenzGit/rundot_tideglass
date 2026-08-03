@@ -1,8 +1,8 @@
 {
-  "gameId": "REPLACE_WITH_RUN_GAME_ID",
+  "gameId": "CWXOeuPkUTKkNf0TRgFt",
   "relativePathToDistFolder": "dist",
   "usesPreloader": false,
-  "orientation": "Portrait",
+  "orientation": "portrait",
   "keywords": ["mahjong", "solitaire", "puzzle", "tile matching", "relaxing", "casual", "brain"],
   "kitId": null
 }

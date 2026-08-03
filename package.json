@@ -1,6 +1,6 @@
 {
   "name": "tideglass",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TIDEGLASS \u2014 a drowned mahjong set, worn to sea glass. Portrait PixiJS 8, WebGPU-first.",
   "private": true,
   "license": "SEE LICENSE IN LICENSE.md",

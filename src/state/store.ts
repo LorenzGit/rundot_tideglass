@@ -135,11 +135,10 @@ let state: AppState = {
     lastResult: null,
 
     musicEnabled: true,
-    // The streamed track is mixed to sit UNDER the game: 20% is the shipped
-    // level, and the settings slider moves from there.
-    musicVolume: 0.2,
+    // Music sits under gameplay; SFX carry the read. Defaults: 10% / 90%.
+    musicVolume: 0.1,
     sfxEnabled: true,
-    sfxVolume: 0.7,
+    sfxVolume: 0.9,
     notificationsEnabled: false,
     notificationsConsent: "unknown",
     hapticsEnabled: true,
