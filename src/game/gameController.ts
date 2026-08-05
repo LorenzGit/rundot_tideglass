@@ -10,6 +10,7 @@
  * completed, and paid stipends come from a live entitlement read.
  */
 import { audioManager } from "../audio/audioManager.ts";
+import { analytics, FIRST_PLAY_FUNNEL } from "../systems/analytics/analyticsConfig.ts";
 import { NoiseRandom } from "./noiseRandom.ts";
 import { MahjongSession } from "./mahjong/session.ts";
 import { SHUFFLE_UNLOCK_LEVEL } from "./mahjong/levels.ts";
@@ -66,6 +67,16 @@ export class GameController {
         this.session = session;
         this.secondWindUsed = false;
 
+        // Read BEFORE the write below: once the high-water mark is overwritten,
+        // "was this a record?" is unanswerable. A beaten best is the progression
+        // beat that predicts a next session, which run_ended alone cannot show.
+        if (level > store.get().highestLevel) {
+            analytics.event("milestone_reached", {
+                milestone: "highest_level",
+                value: level,
+                previous: store.get().highestLevel,
+            });
+        }
         store.patch({
             level,
             highestLevel: Math.max(store.get().highestLevel, level),
@@ -79,6 +90,9 @@ export class GameController {
         this.publish();
         void saveSystem.flush();
         void recordAnalytics("level_started", { level, layout: session.plan.layout.id });
+        // Steps 2 and 6 share this call site; the once-ever marks make the
+        // second start register as "came back for another level" on its own.
+        analytics.funnelStep(FIRST_PLAY_FUNNEL, store.get().totalPlays <= 1 ? 2 : 6, { level });
     }
 
     restartLevel(): void {
@@ -116,6 +130,7 @@ export class GameController {
         }
         audioManager.play(result.perfect ? "perfect" : "match");
         void this.haptic(result.perfect ? "success" : "medium");
+        analytics.funnelStep(FIRST_PLAY_FUNNEL, 3);
         dailySystems.recordProgress("matches", 1);
         // "combos" is a high-water task, so it is handed the combo reached
         // rather than an increment.
@@ -184,6 +199,13 @@ export class GameController {
             best_combo: session.bestCombo,
             matches: session.matches,
         });
+        if (cleared) {
+            analytics.funnelStep(FIRST_PLAY_FUNNEL, 4, { level: session.plan.level, score: payout.totalScore });
+            analytics.funnelStep("engagement", store.get().levelsCleared, { level: session.plan.level });
+        }
+        // Fires on a loss too: the results overlay is where an abandoned first
+        // session actually ends, so it must be visible for both outcomes.
+        analytics.funnelStep(FIRST_PLAY_FUNNEL, 5, { cleared });
     }
 
     publish(): void {

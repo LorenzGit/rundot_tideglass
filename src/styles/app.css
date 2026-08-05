@@ -1506,6 +1506,12 @@ body[data-backdrop="shrine"]::before {
     }
 
     .menu-record {
+        /*
+         * The tightened landscape padding + smaller type computed to 36px tall,
+         * under the reliable touch minimum. Pin the floor rather than undo the
+         * compaction, so the row still fits the short viewport.
+         */
+        min-height: 44px;
         margin-top: 0.45rem;
         padding: 0.5rem 1rem;
         font-size: 0.74rem;
@@ -1548,4 +1554,20 @@ body[data-backdrop="shrine"]::before {
     .loading-title {
         font-size: 1.8rem;
     }
+}
+
+/*
+ * Hand cursor on anything clickable.
+ *
+ * A native <button> does NOT get a pointer cursor by default — browsers render
+ * the plain arrow — so it has to be asked for. Without this, desktop players
+ * get no hover affordance and the UI reads as inert. Element-selector
+ * specificity is the weakest there is, so any existing per-class `cursor` rule
+ * (including `default` or `not-allowed`) still wins.
+ */
+button:not(:disabled),
+summary,
+[role="button"]:not([aria-disabled="true"]),
+label[for] {
+    cursor: pointer;
 }

@@ -4,6 +4,7 @@ import { store } from "../state/store.ts";
 import { saveSystem } from "./save.ts";
 import { runtimeServices } from "./runtimeServices.ts";
 
+import { returnReminders } from "./retention/retentionConfig.ts";
 /**
  * Seven days of pearls. The curve rewards the return rather than the first
  * claim — day seven is worth more than days one to four together, which is the
@@ -123,6 +124,10 @@ export const dailySystems = {
                 pearls: view.reward,
                 authoritative: view.authoritative,
             });
+        // Kill switch: the 24h reminder promises this reward. Leaving it scheduled
+        // pings the player about something they just claimed, which is exactly how
+        // a useful notification becomes a muted one.
+        void returnReminders.cancel("d1");
         return { ok, reason: ok ? "CLAIMED" : "SAVE FAILED", pearls: ok ? view.reward : 0 };
     },
 

@@ -26,6 +26,7 @@ import {
 } from "./monetization/purchaseCoordinator.ts";
 import { saveSystem } from "./save.ts";
 
+import { analytics } from "./analytics/analyticsConfig.ts";
 let catalog = new Map<string, StorefrontItem>();
 let catalogConfigId: string | null = null;
 let entitlementIds = new Set<string>();
@@ -258,9 +259,12 @@ export async function purchaseProduct(
     const definition = products.get(productId);
     if (!view.purchasable || !definition) return null;
 
+    analytics.funnelStep("purchase", 2);
     monetizationTelemetry.record("purchase_tapped", { product_id: productId, placement });
+    analytics.funnelStep("purchase", 3);
     monetizationTelemetry.record("checkout_started", { product_id: productId, placement });
     const outcome = await purchaseCoordinator.purchase(productId, definition.catalogItemId);
+    analytics.funnelStep("purchase", 4);
     monetizationTelemetry.record("checkout_result", {
         product_id: productId,
         placement,

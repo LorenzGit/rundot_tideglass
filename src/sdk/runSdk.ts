@@ -534,3 +534,41 @@ export function registerLifecycles({
         },
     };
 }
+
+// ---------------------------------------------------------------------------
+// Return-reminder support. Kept beside the other notification calls so the
+// retention module never talks to RundotGameAPI directly.
+// ---------------------------------------------------------------------------
+
+/** True once the player has granted local-notification permission. */
+export async function notificationsEnabled(): Promise<boolean> {
+    try {
+        return (await RundotGameAPI.notifications.isLocalNotificationsEnabled()) === true;
+    } catch {
+        return false;
+    }
+}
+
+/** Cancel a scheduled reminder once the thing it promised has been done. */
+export async function cancelLocalNotification(id: string): Promise<void> {
+    try {
+        await RundotGameAPI.notifications.cancelNotification(id);
+    } catch {
+        // a reminder that will not cancel must not break the beat that
+        // completed the task it was promising
+    }
+}
+
+/**
+ * How this session was launched. `timed_out` is treated as unknown rather than
+ * organic, so notification attribution never over-counts cold starts.
+ */
+export async function resolveLaunchIntent(): Promise<{ kind: string; params: Record<string, string> } | null> {
+    try {
+        const intent = await RundotGameAPI.app.resolveLaunchIntent({ maxWaitMs: 800 });
+        if (!intent || intent.kind === "timed_out") return null;
+        return { kind: intent.kind, params: intent.params ?? {} };
+    } catch {
+        return null;
+    }
+}

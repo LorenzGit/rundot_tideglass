@@ -28,6 +28,7 @@ import {
 import { getMonetizationControls, monetizationTelemetry } from "./monetization/runtime.ts";
 import { localDayKey, serverNow } from "./serverTime.ts";
 
+import { analytics } from "./analytics/analyticsConfig.ts";
 interface PlacementCounters {
     session: number;
     day: number;
@@ -125,7 +126,12 @@ export async function showRewarded(id: PlacementId): Promise<VerifiedActionResul
     const placement = placements.require(id);
     monetizationTelemetry.record("ad_requested", { placement_id: id, format: "rewarded" });
 
+    // Offered vs complete: one without the other separates a weak reward from
+    // missing inventory. Only a confirmed result earned the reward.
+    analytics.event("rewarded_ad_offered", { ad_display_id: String(PLACEMENT_DISPLAY_ID[id]) });
     const result = await showVerifiedRewardedAd(PLACEMENT_DISPLAY_ID[id], placement.displayName);
+    if (result === "verified")
+        analytics.event("rewarded_ad_complete", { ad_display_id: String(PLACEMENT_DISPLAY_ID[id]) });
     monetizationTelemetry.record("ad_result", { placement_id: id, format: "rewarded", result });
 
     if (result === "verified" || result === "cancelled") {
@@ -197,6 +203,9 @@ export async function maybeShowInterstitial(): Promise<VerifiedActionResult> {
         PLACEMENT_DISPLAY_ID[PLACEMENT.betweenLevels],
         placement.displayName,
     );
+    // Interstitial load is the number to weigh against D1 when tuning ads.
+    if (result === "verified")
+        analytics.event("interstitial_shown", { ad_display_id: String(PLACEMENT_DISPLAY_ID[PLACEMENT.betweenLevels]) });
     monetizationTelemetry.record("ad_result", {
         placement_id: PLACEMENT.betweenLevels,
         format: "interstitial",
