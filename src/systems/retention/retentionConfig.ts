@@ -6,6 +6,7 @@ import {
     resolveLaunchIntent,
 } from "../../sdk/runSdk";
 import { RETURN_DELAYS_SECONDS, createReturnReminders } from "./returnReminders";
+import { store } from "../../state/store";
 
 /**
  * Return reminders for tideglass.
@@ -54,7 +55,12 @@ export const returnReminders = createReturnReminders({
     schedule: (input) => rearmLocalNotification(input),
     cancel: (id) => cancelLocalNotification(id),
     resolveLaunch: () => resolveLaunchIntent(),
-    isEnabled: () => notificationsGranted,
+    // The cached permission annotates the scheduled event; it must never gate
+    // scheduling. A stale or failed boot probe would otherwise silence the
+    // whole cadence for the session, and a mid-session grant would never arm.
+    // The settings toggle is a real player choice and does gate.
+    isOptedOut: () => !store.get().notificationsEnabled,
+    permissionHint: () => notificationsGranted,
     track: (event, payload) => analytics.event(event, payload),
 });
 
